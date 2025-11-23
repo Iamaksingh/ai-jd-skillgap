@@ -27,7 +27,19 @@ async function analyzeResumeAndJD(resumeText = '', jdText = '') {
     }
 
     const prompt = ` You analyze a candidate's resume against a Job Description. If the provided text does NOT look like a job 
-    description (e.g., it is unrelated content, too short, random text, a blog, or user-selected irrelevant content), then Return 
+    description (e.g., it is unrelated content, too short, random text, a blog, or user-selected irrelevant content), 
+    You MUST calculate roleFitScore using the following strict scale: 
+    0-20 = Very poor match. Missing most required skills. Candidate is not suitable.
+    21-40 = Weak match. Many gaps in required skills or experience.
+    41-60 = Moderate match. Some relevant skills, but multiple important missing areas.
+    61-80 = Strong match. Most required skills are present, only minor gaps.
+    81-100 = Excellent match. Candidate highly matches the JD, minimal or no gaps.
+    Before giving the score, internally (do not output this) count: - how many technical skills from the JD appear in the resume - how many soft skills appear - how much direct experience matches
+    Avoid “neutral” scores like 60–70 unless the match is truly moderate.
+    Make the score reflect the actual analysis objectively.
+    Then compute the score strictly based on this evaluation.
+    Your score MUST be justified by the number of matching vs missing skills,
+    not a gut feeling. Do NOT default to mid-values unless analysis supports it then Return 
     STRICT JSON ONLY with these keys:
 
     {
