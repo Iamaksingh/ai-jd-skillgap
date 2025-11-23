@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const analysisRoutes = require('./routes/analysis.routes');
+const extractRoutes = require("./routes/extract.routes");
 const { limiter } = require('./middleware/rateLimiter');
 const connectDB = require('./config/db');
 
@@ -12,6 +13,7 @@ app.use(limiter);
 // health
 app.get('/health', (req, res) => res.json({ ok: true, ts: Date.now() }));
 
+app.use("/api/v1/extract-resume", extractRoutes);
 // routes
 app.use('/api/v1/analysis', analysisRoutes);
 

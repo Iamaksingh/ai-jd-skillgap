@@ -1,25 +1,34 @@
-const Analysis = require('../models/Analysis');
-const { extractTextFromBuffer } = require('../utils/pdfParser');
-const { analyzeResumeAndJD } = require('../services/geminiService');
+const Analysis = require("../models/Analysis");
+const { extractTextFromBuffer } = require("../utils/pdfParser");
+const { analyzeResumeAndJD } = require("../services/geminiService");
 
 async function analyze(req, res) {
   try {
-    const jdText = req.body.jdText || '';
-    let resumeText = '';
+    const jdText = req.body.jdText || "";
+    let resumeText = "";
 
-    if (req.file && req.file.buffer) {
+    // EXTENSION SUPPORT — directly send resumeText
+    if (req.body.resumeText) {
+      resumeText = req.body.resumeText;
+    }
+
+    // PDF upload support — for Postman / website version
+    else if (req.file && req.file.buffer) {
       resumeText = await extractTextFromBuffer(req.file.buffer);
     }
 
-    // basic validation
-    if (!jdText && !resumeText) {
-      return res.status(400).json({ error: 'Provide resume PDF or job description text.' });
+    if (!resumeText) {
+      return res.status(400).json({ error: "Resume missing: send resumeText or upload file" });
     }
 
-    // call AI service
+    if (!jdText) {
+      return res.status(400).json({ error: "Job description missing" });
+    }
+
+    // Call Gemini
     const aiResult = await analyzeResumeAndJD(resumeText, jdText);
 
-    // save to DB
+    // Save to DB
     const analysis = await Analysis.create({
       resumeText,
       jdText,
@@ -27,19 +36,17 @@ async function analyze(req, res) {
       missingKeywords: aiResult.missingKeywords,
       learningPlan: aiResult.learningPlan,
       roleFitScore: aiResult.roleFitScore,
-      meta: aiResult.meta || {},
+      meta: aiResult.meta,
     });
 
     return res.json({
       id: analysis._id,
-      skillGaps: aiResult.skillGaps,
-      missingKeywords: aiResult.missingKeywords,
-      learningPlan: aiResult.learningPlan,
-      roleFitScore: aiResult.roleFitScore,
+      ...aiResult,
     });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Internal server error' });
+
+  } catch (error) {
+    console.error("Analysis error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 }
 
