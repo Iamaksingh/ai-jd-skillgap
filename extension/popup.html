@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>JD Skill Gap Analyzer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <h2 class="title">JD Skill Gap Analyzer</h2>
+
+  <!-- Resume Upload Card -->
+  <div class="card">
+    <h3 class="section-title">Your Resume</h3>
+    <p id="resumeInfo" class="info">No resume uploaded</p>
+
+    <input type="file" id="fileInput" accept="application/pdf" class="file-input">
+    <button id="uploadBtn" class="btn">Upload & Save Resume</button>
+  </div>
+
+  <!-- JD Selection Card -->
+  <div class="card">
+    <h3 class="section-title">Job Description</h3>
+
+    <button id="getSelectionBtn" class="btn secondary">
+      Use Selected Text from Page
+    </button>
+    <p class="small">Highlight JD → click above</p>
+
+    <textarea id="jdTextarea" placeholder="Or paste JD here..." class="textarea"></textarea>
+    <button id="analyzeBtn" class="btn full">Analyze JD</button>
+  </div>
+
+  <div id="loading" class="loading hidden">Analyzing...</div>
+  <div id="toast" class="toast hidden"></div>
+  <!-- AI Result -->
+  <div id="result" class="result-card hidden"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
