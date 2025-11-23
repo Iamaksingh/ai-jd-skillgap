@@ -31,7 +31,7 @@ async function analyzeResumeAndJD(resumeText = '', jdText = '') {
       "skillGaps": string[],
       "missingKeywords": string[],
       "learningPlan": string,
-      "roleFitScore": number
+      "roleFitScore": number(0-100)
     }
     Resume:"""${rText}"""
     Job Description:"""${jdText}"""`;
