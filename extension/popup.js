@@ -1,4 +1,4 @@
-const BACKEND = "http://localhost:4000";
+const BACKEND = "https://ai-jd-skillgap.onrender.com";
 
 const resumeInfo = document.getElementById("resumeInfo");
 const fileInput = document.getElementById("fileInput");
