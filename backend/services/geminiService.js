@@ -26,12 +26,22 @@ async function analyzeResumeAndJD(resumeText = '', jdText = '') {
       rText = rText.slice(0, MAX_LEN) + "\n\n[TRUNCATED]";
     }
 
-    const prompt = ` You analyze a candidate's resume against a Job Description. Return STRICT JSON ONLY with these keys:
+    const prompt = ` You analyze a candidate's resume against a Job Description. If the provided text does NOT look like a job 
+    description (e.g., it is unrelated content, too short, random text, a blog, or user-selected irrelevant content), then Return 
+    STRICT JSON ONLY with these keys:
+
     {
-      "skillGaps": string[],
-      "missingKeywords": string[],
-      "learningPlan": string,
-      "roleFitScore": number(0-100)
+      "isJD": false,
+      "message": "This does not appear to be a job description."
+    }
+
+    Else return the normal analysis with:
+    {
+      "isJD": true,
+      "skillGaps": [...],
+      "missingKeywords": [...],
+      "learningPlan": "...",
+      "roleFitScore": 0-100
     }
     Resume:"""${rText}"""
     Job Description:"""${jdText}"""`;
