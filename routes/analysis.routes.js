@@ -1,13 +1,13 @@
 const express = require('express');
 const multer = require('multer');
 const { analyze } = require('../controllers/analysisController');
+const { analysisLimiter } = require('../middleware/analysisLimiter');
 
 const upload = multer({ storage: multer.memoryStorage() });
 
 const router = express.Router();
 
-// POST /api/v1/analysis
-// form-data: file -> resume PDF, jdText -> job description text
-router.post('/', upload.single('file'), analyze);
+// Route-level rate limiting here 👇
+router.post('/', analysisLimiter, upload.single('file'), analyze);
 
 module.exports = router;
