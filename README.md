@@ -1,4 +1,4 @@
-# SkillGapBreacher - JD Skill Gap Analyzer
+# JD Skill Gap Analyzer
 
 A full-stack application that intelligently analyzes job descriptions against your resume to identify skill gaps, missing keywords, and provides a personalized learning plan. Built with a Chrome extension for seamless integration and an AI-powered backend.
 
